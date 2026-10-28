@@ -1,13 +1,52 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>register</ion-title>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Alta de Usuario - JG Cables</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">register</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <div style="max-width: 480px; margin: 0 auto;">
+    <h2>Crear Nueva Cuenta</h2>
+    <form [formGroup]="registerForm" (ngSubmit)="registrar()">
+      
+      <ion-item fill="outline" class="ion-margin-bottom">
+        <ion-label position="floating">Nombre Completo</ion-label>
+        <ion-input formControlName="nombre"></ion-input>
+        <ion-note slot="error" *ngIf="registerForm.get('nombre')?.touched && registerForm.get('nombre')?.hasError('required')">
+          El nombre es obligatorio
+        </ion-note>
+      </ion-item>
+
+      <ion-item fill="outline" class="ion-margin-bottom">
+        <ion-label position="floating">Correo Corporativo</ion-label>
+        <ion-input type="email" formControlName="email"></ion-input>
+        <ion-spinner slot="end" name="dots" *ngIf="email?.pending"></ion-spinner>
+        
+        <ion-note slot="error" *ngIf="email?.touched && email?.hasError('required')">
+          El correo es obligatorio
+        </ion-note>
+        <ion-note slot="error" *ngIf="email?.touched && email?.hasError('email')">
+          Formato de correo no válido
+        </ion-note>
+        <ion-note slot="error" *ngIf="email?.touched && email?.hasError('emailDuplicado')">
+          Este correo ya se encuentra en uso en la base de datos
+        </ion-note>
+      </ion-item>
+
+      <ion-item fill="outline" class="ion-margin-bottom">
+        <ion-label position="floating">Contraseña</ion-label>
+        <ion-input type="password" formControlName="password"></ion-input>
+        <ion-note slot="error" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.hasError('minlength')">
+          Mínimo 6 caracteres
+        </ion-note>
+      </ion-item>
+
+      <ion-button expand="block" type="submit" [disabled]="registerForm.invalid || registerForm.pending" class="ion-margin-top">
+        Confirmar Alta
+      </ion-button>
+    </form>
+  </div>
 </ion-content>
