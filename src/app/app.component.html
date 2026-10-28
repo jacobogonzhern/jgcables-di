@@ -1,30 +1,51 @@
 <ion-app>
-  <ion-split-pane contentId="main-content">
+  <ion-split-pane contentId="main-content" when="md">
     <ion-menu contentId="main-content" type="overlay">
       <ion-content>
-        <ion-list id="inbox-list">
-          <ion-list-header>Inbox</ion-list-header>
-          <ion-note>hi&#64;ionicframework.com</ion-note>
+        <ion-list id="navigation-list">
+          <ion-list-header>
+            <ion-icon name="hardware-chip-outline" slot="start" color="primary"></ion-icon>
+            <ion-label>JG Cables - Gestión</ion-label>
+          </ion-list-header>
 
-          @for (p of appPages; track p; let i = $index) {
+          <ng-container *ngIf="auth.user$ | async as user; else noAuth">
             <ion-menu-toggle auto-hide="false">
-              <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
-                <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
-                <ion-label>{{ p.title }}</ion-label>
+              <ion-item routerLink="/pedidos" routerLinkActive="selected" lines="none">
+                <ion-icon slot="start" name="receipt-outline"></ion-icon>
+                <ion-label>Gestión de Pedidos</ion-label>
               </ion-item>
             </ion-menu-toggle>
-          }
-        </ion-list>
 
-        <ion-list id="labels-list">
-          <ion-list-header>Labels</ion-list-header>
+            <ng-container *ngIf="user.rol === 'admin'">
+              <ion-menu-toggle auto-hide="false">
+                <ion-item routerLink="/dashboard" routerLinkActive="selected" lines="none">
+                  <ion-icon slot="start" name="bar-chart-outline"></ion-icon>
+                  <ion-label>Dashboard Analítico</ion-label>
+                </ion-item>
+              </ion-menu-toggle>
 
-          @for (label of labels; track label) {
-            <ion-item lines="none">
-              <ion-icon aria-hidden="true" slot="start" ios="bookmark-outline" md="bookmark-sharp"></ion-icon>
-              <ion-label>{{ label }}</ion-label>
+              <ion-menu-toggle auto-hide="false">
+                <ion-item routerLink="/usuarios" routerLinkActive="selected" lines="none">
+                  <ion-icon slot="start" name="people-outline"></ion-icon>
+                  <ion-label>Usuarios del Sistema</ion-label>
+                </ion-item>
+              </ion-menu-toggle>
+            </ng-container>
+
+            <ion-item button (click)="logout()" lines="none" class="ion-margin-top">
+              <ion-icon slot="start" name="log-out-outline" color="danger"></ion-icon>
+              <ion-label color="danger">Cerrar Sesión</ion-label>
             </ion-item>
-          }
+          </ng-container>
+
+          <ng-template #noAuth>
+            <ion-menu-toggle auto-hide="false">
+              <ion-item routerLink="/login" routerLinkActive="selected" lines="none">
+                <ion-icon slot="start" name="log-in-outline"></ion-icon>
+                <ion-label>Iniciar Sesión</ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+          </ng-template>
         </ion-list>
       </ion-content>
     </ion-menu>
