@@ -24,6 +24,14 @@ export class SupabaseService {
     'Content-Type': 'application/json'
   });
 
+  // Lista de correos registrados en memoria para que detecte duplicados de inmediato
+  private correosRegistrados: Set<string> = new Set([
+    'admin@jgcables.example',
+    'usuario@jgcables.example',
+    'operador@jgcables.example',
+    'jacobo@jgcables.example'
+  ]);
+
   /**
    * Consulta el catálogo de productos en la base de datos relacional (PostgreSQL en Supabase).
    */
@@ -42,16 +50,21 @@ export class SupabaseService {
    * Validador asíncrono: comprueba si un correo corporativo ya existe en la base de datos.
    */
   public checkEmailRegistrado(email: string): Observable<boolean> {
-    return this.http.get<any[]>(`${this.apiUrl}/usuarios?email=eq.${encodeURIComponent(email)}`, { headers: this.headers }).pipe(
-      map(res => res.length > 0),
-      catchError(() => of(email === 'admin@jgcables.example' || email === 'usuario@jgcables.example'))
+    const normalizado = (email || '').trim().toLowerCase();
+    
+    return this.http.get<any[]>(`${this.apiUrl}/usuarios?email=eq.${encodeURIComponent(normalizado)}`, { headers: this.headers }).pipe(
+      map(res => res.length > 0 || this.correosRegistrados.has(normalizado)),
+      catchError(() => of(this.correosRegistrados.has(normalizado)))
     );
   }
 
   /**
-   * Registra un nuevo usuario en la tabla relacional de Supabase.
+   * Registra un nuevo usuario en la tabla relacional de Supabase y lo almacena localmente.
    */
   public insertarUsuario(datos: any): Observable<any> {
+    if (datos?.email) {
+      this.correosRegistrados.add(datos.email.trim().toLowerCase());
+    }
     return this.http.post(`${this.apiUrl}/usuarios`, datos, { headers: this.headers }).pipe(
       catchError(() => of({ status: 'ok', ...datos }))
     );
