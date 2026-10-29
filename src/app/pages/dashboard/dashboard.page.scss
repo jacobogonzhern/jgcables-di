@@ -1,0 +1,18 @@
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.metrics-grid app-metric-card {
+  min-width: 0;
+}
+
+@media (max-width: 600px) {
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+}

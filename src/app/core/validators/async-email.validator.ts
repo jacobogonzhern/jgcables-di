@@ -1,6 +1,6 @@
 import { AbstractControl, AsyncValidatorFn, ValidationErrors } from '@angular/forms';
 import { Observable, of, timer } from 'rxjs';
-import { map, switchMap, catchError } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs';
 import { SupabaseService } from '../services/supabase.service';
 
 export function emailDisponibleValidator(supabaseService: SupabaseService): AsyncValidatorFn {
@@ -18,7 +18,10 @@ export function emailDisponibleValidator(supabaseService: SupabaseService): Asyn
         }
         return null;
       }),
-      catchError(() => of(null))
+      catchError(error => {
+        console.error('No se pudo comprobar el correo en Supabase:', error);
+        return of({ emailCheckFailed: true });
+      })
     );
   };
 }

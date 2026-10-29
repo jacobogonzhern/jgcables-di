@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   IonApp, IonSplitPane, IonMenu, IonContent, IonList,
   IonListHeader, IonMenuToggle, IonItem, IonIcon, IonLabel,
-  IonRouterOutlet, IonButton
+  IonRouterOutlet
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
@@ -18,10 +18,10 @@ import { AuthService } from './core/services/auth.service';
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
   imports: [
-    RouterLink, RouterLinkActive, AsyncPipe, NgIf,
+    RouterLink, RouterLinkActive, AsyncPipe,
     IonApp, IonSplitPane, IonMenu, IonContent, IonList,
     IonListHeader, IonMenuToggle, IonItem, IonIcon, IonLabel,
-    IonRouterOutlet, IonButton
+    IonRouterOutlet
   ]
 })
 export class AppComponent {

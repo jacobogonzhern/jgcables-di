@@ -8,7 +8,7 @@
             <ion-label>JG Cables - Gestión</ion-label>
           </ion-list-header>
 
-          <ng-container *ngIf="auth.user$ | async as user; else noAuth">
+          @if (auth.user$ | async; as user) {
             <ion-menu-toggle auto-hide="false">
               <ion-item routerLink="/pedidos" routerLinkActive="selected" lines="none">
                 <ion-icon slot="start" name="receipt-outline"></ion-icon>
@@ -16,7 +16,7 @@
               </ion-item>
             </ion-menu-toggle>
 
-            <ng-container *ngIf="user.rol === 'admin'">
+            @if (user.rol === 'admin') {
               <ion-menu-toggle auto-hide="false">
                 <ion-item routerLink="/dashboard" routerLinkActive="selected" lines="none">
                   <ion-icon slot="start" name="bar-chart-outline"></ion-icon>
@@ -30,22 +30,20 @@
                   <ion-label>Usuarios del Sistema</ion-label>
                 </ion-item>
               </ion-menu-toggle>
-            </ng-container>
+            }
 
             <ion-item button (click)="logout()" lines="none" class="ion-margin-top">
               <ion-icon slot="start" name="log-out-outline" color="danger"></ion-icon>
               <ion-label color="danger">Cerrar Sesión</ion-label>
             </ion-item>
-          </ng-container>
-
-          <ng-template #noAuth>
+          } @else {
             <ion-menu-toggle auto-hide="false">
               <ion-item routerLink="/login" routerLinkActive="selected" lines="none">
                 <ion-icon slot="start" name="log-in-outline"></ion-icon>
                 <ion-label>Iniciar Sesión</ion-label>
               </ion-item>
             </ion-menu-toggle>
-          </ng-template>
+          }
         </ion-list>
       </ion-content>
     </ion-menu>

@@ -9,7 +9,15 @@ import {
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonLabel,
+  IonSearchbar,
+  IonSelect,
+  IonSelectOption
+} from '@ionic/angular';
 
 import {
   Subject,
@@ -23,7 +31,13 @@ import {
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    IonButton,
+    IonCard,
+    IonCardContent,
+    IonLabel,
+    IonSearchbar,
+    IonSelect,
+    IonSelectOption
   ],
   templateUrl: './data-table.component.html',
   styleUrls: ['./data-table.component.scss'],
@@ -38,10 +52,10 @@ export class DataTableComponent implements OnInit, OnDestroy {
   @Input() data: any[] = [];
 
   // Evento que se emite al seleccionar una fila
-  @Output() onRowSelect = new EventEmitter<any>();
+  @Output() rowSelect = new EventEmitter<any>();
 
   // Evento que se emite al buscar
-  @Output() onSearch = new EventEmitter<string>();
+  @Output() searchChanged = new EventEmitter<string>();
 
   // Texto de búsqueda
   searchTerm: string = '';
@@ -75,7 +89,7 @@ export class DataTableComponent implements OnInit, OnDestroy {
         this.currentPage = 1;
 
         // Avisar a la página padre
-        this.onSearch.emit(term);
+        this.searchChanged.emit(term);
 
       });
 
@@ -170,7 +184,7 @@ export class DataTableComponent implements OnInit, OnDestroy {
 
   // Seleccionar una fila
   selectRow(row: any): void {
-    this.onRowSelect.emit(row);
+    this.rowSelect.emit(row);
   }
 
   // Liberar las suscripciones al destruir el componente
