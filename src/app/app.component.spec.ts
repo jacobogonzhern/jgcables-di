@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
+    localStorage.removeItem('jgcables_sesion');
     await TestBed.configureTestingModule({
       imports: [AppComponent],
       providers: [provideRouter([])]
@@ -26,16 +27,15 @@ describe('AppComponent', () => {
     await fixture.whenStable();
     const app = fixture.nativeElement;
     const menuItems = app.querySelectorAll('ion-label');
-    expect(menuItems.length).toEqual(12);
-    expect(menuItems[0].innerHTML).toContain('Inbox');
-    expect(menuItems[1].innerHTML).toContain('Outbox');
+    expect(menuItems.length).toEqual(2);
+    expect(menuItems[1].innerHTML).toContain('Iniciar Sesión');
   });
 
   it('should have urls', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const app = fixture.nativeElement;
-    expect(app.querySelectorAll('ion-item').length).toEqual(12);
+    expect(app.querySelectorAll('ion-item').length).toEqual(1);
     // Ionic applies the rendered href through its own async write queue, so
     // reading the DOM attribute is flaky (FW-6264). Assert the routerLink
     // binding directly, which resolves synchronously.
@@ -43,8 +43,7 @@ describe('AppComponent', () => {
     const links = fixture.debugElement
       .queryAll(By.directive(RouterLink))
       .map((el) => el.injector.get(RouterLink));
-    expect(links.length).toEqual(6);
-    expect(router.serializeUrl(links[0].urlTree!)).toEqual('/folder/Inbox');
-    expect(router.serializeUrl(links[1].urlTree!)).toEqual('/folder/Outbox');
+    expect(links.length).toEqual(1);
+    expect(router.serializeUrl(links[0].urlTree!)).toEqual('/login');
   });
 });

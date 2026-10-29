@@ -6,17 +6,22 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 
-import { CommonModule } from '@angular/common';
+import { IonCard, IonCardContent, IonIcon, IonText } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { statsChart } from 'ionicons/icons';
 
 @Component({
   selector: 'app-metric-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [IonCard, IonCardContent, IonIcon, IonText],
   templateUrl: './metric-card.component.html',
   styleUrls: ['./metric-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MetricCardComponent {
+  constructor() {
+    addIcons({ statsChart });
+  }
 
   // Título de la tarjeta
   @Input() title: string = '';

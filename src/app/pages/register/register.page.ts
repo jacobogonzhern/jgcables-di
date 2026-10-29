@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonItem,
   IonLabel, IonInput, IonButton, IonSpinner,
@@ -15,7 +15,7 @@ import { SupabaseService } from '../../core/services/supabase.service';
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
   imports: [
-    CommonModule, ReactiveFormsModule, RouterLink,
+    CommonModule, ReactiveFormsModule,
     IonHeader, IonToolbar, IonTitle, IonContent, IonItem,
     IonLabel, IonInput, IonButton, IonSpinner,
     IonButtons, IonBackButton
@@ -42,8 +42,8 @@ export class RegisterPage implements OnInit {
     });
   }
 
-  get email() {
-    return this.registerForm.get('email');
+  get email(): AbstractControl {
+    return this.registerForm.controls['email'];
   }
 
   async registrar() {

@@ -19,38 +19,57 @@
         <ion-label position="floating">Nombre Completo</ion-label>
         <ion-input formControlName="nombre"></ion-input>
       </ion-item>
-      <div *ngIf="registerForm.get('nombre')?.touched && registerForm.get('nombre')?.invalid" style="color: #eb445a; font-size: 0.85rem; margin: -10px 0 12px 6px;">
-        El nombre es obligatorio (mínimo 3 caracteres)
-      </div>
+      @if (registerForm.get('nombre')?.touched && registerForm.get('nombre')?.invalid) {
+        <div style="color: #eb445a; font-size: 0.85rem; margin: -10px 0 12px 6px;">
+          El nombre es obligatorio (mínimo 3 caracteres)
+        </div>
+      }
 
       <!-- Campo Correo con Validación Asíncrona -->
-      <ion-item fill="outline" class="ion-margin-bottom" [class.ion-invalid]="email?.invalid && email?.touched">
+      <ion-item fill="outline" class="ion-margin-bottom" [class.ion-invalid]="email.invalid && email.touched">
         <ion-label position="floating">Correo Corporativo</ion-label>
         <ion-input type="email" formControlName="email"></ion-input>
-        <ion-spinner slot="end" name="dots" *ngIf="email?.pending"></ion-spinner>
+        @if (email.pending) {
+          <ion-spinner slot="end" name="dots"></ion-spinner>
+        }
       </ion-item>
 
       <!-- Mensajes de Error Visibles -->
-      <div *ngIf="email?.touched && email?.invalid" style="margin: -10px 0 14px 6px;">
-        <div *ngIf="email?.hasError('required')" style="color: #eb445a; font-size: 0.85rem;">
-          ⚠️ El correo es obligatorio.
+      @if (email.touched && email.invalid) {
+        <div style="margin: -10px 0 14px 6px;">
+          @if (email.hasError('required')) {
+            <div style="color: #eb445a; font-size: 0.85rem;">
+              ⚠️ El correo es obligatorio.
+            </div>
+          }
+          @if (email.hasError('email')) {
+            <div style="color: #eb445a; font-size: 0.85rem;">
+              ⚠️ Formato de correo no válido.
+            </div>
+          }
+          @if (email.hasError('emailDuplicado')) {
+            <div style="color: #eb445a; font-weight: bold; font-size: 0.88rem; background: #ffebee; padding: 6px 10px; border-radius: 6px; border: 1px solid #ffcdd2;">
+              ❌ Este correo ya se encuentra en uso en la base de datos.
+            </div>
+          }
+          @if (email.hasError('emailCheckFailed')) {
+            <div style="color: #eb445a; font-size: 0.85rem;">
+              No se pudo comprobar el correo. Inténtalo de nuevo.
+            </div>
+          }
         </div>
-        <div *ngIf="email?.hasError('email')" style="color: #eb445a; font-size: 0.85rem;">
-          ⚠️ Formato de correo no válido.
-        </div>
-        <div *ngIf="email?.hasError('emailDuplicado')" style="color: #eb445a; font-weight: bold; font-size: 0.88rem; background: #ffebee; padding: 6px 10px; border-radius: 6px; border: 1px solid #ffcdd2;">
-          ❌ Este correo ya se encuentra en uso en la base de datos.
-        </div>
-      </div>
+      }
 
       <!-- Campo Contraseña -->
       <ion-item fill="outline" class="ion-margin-bottom" [class.ion-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
         <ion-label position="floating">Contraseña</ion-label>
         <ion-input type="password" formControlName="password"></ion-input>
       </ion-item>
-      <div *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid" style="color: #eb445a; font-size: 0.85rem; margin: -10px 0 14px 6px;">
-        La contraseña debe tener al menos 6 caracteres.
-      </div>
+      @if (registerForm.get('password')?.touched && registerForm.get('password')?.invalid) {
+        <div style="color: #eb445a; font-size: 0.85rem; margin: -10px 0 14px 6px;">
+          La contraseña debe tener al menos 6 caracteres.
+        </div>
+      }
 
       <!-- Botón de Envío -->
       <ion-button expand="block" type="submit" [disabled]="registerForm.invalid || registerForm.pending" class="ion-margin-top">

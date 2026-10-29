@@ -1,13 +1,35 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>pedidos</ion-title>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Gestión de pedidos</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/dashboard">Dashboard</ion-button>
+      <ion-button routerLink="/pedidos">Pedidos</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">pedidos</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+
+  <h1>Pedidos</h1>
+
+  <p>
+    Consulta, busca y selecciona los pedidos registrados.
+  </p>
+
+  @if (cargandoPedidos) {
+    <p role="status">Cargando pedidos...</p>
+  }
+
+  @if (errorPedidos) {
+    <p role="alert">{{ errorPedidos }}</p>
+  }
+
+  <!-- Componente reutilizable de tabla -->
+  <app-data-table
+    [columns]="columnas"
+    [data]="pedidos"
+    (rowSelect)="onPedidoSelect($event)"
+    (searchChanged)="onSearchPedidos($event)"
+  ></app-data-table>
+
 </ion-content>
