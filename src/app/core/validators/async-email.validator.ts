@@ -8,9 +8,16 @@ export function emailDisponibleValidator(supabaseService: SupabaseService): Asyn
     if (!control.value) {
       return of(null);
     }
-    return timer(400).pipe(
+    // Breve debounce para la consulta
+    return timer(300).pipe(
       switchMap(() => supabaseService.checkEmailRegistrado(control.value)),
-      map(existe => (existe ? { emailDuplicado: true } : null)),
+      map(existe => {
+        if (existe) {
+          console.warn(`[Validación Asíncrona] El email '${control.value}' ya existe en la base de datos.`);
+          return { emailDuplicado: true };
+        }
+        return null;
+      }),
       catchError(() => of(null))
     );
   };

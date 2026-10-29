@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonItem,
-  IonLabel, IonInput, IonButton, IonSpinner, IonNote,
+  IonLabel, IonInput, IonButton, IonSpinner,
   IonButtons, IonBackButton, LoadingController, ToastController
 } from '@ionic/angular';
 import { emailDisponibleValidator } from '../../core/validators/async-email.validator';
@@ -17,7 +17,7 @@ import { SupabaseService } from '../../core/services/supabase.service';
   imports: [
     CommonModule, ReactiveFormsModule, RouterLink,
     IonHeader, IonToolbar, IonTitle, IonContent, IonItem,
-    IonLabel, IonInput, IonButton, IonSpinner, IonNote,
+    IonLabel, IonInput, IonButton, IonSpinner,
     IonButtons, IonBackButton
   ]
 })
@@ -33,11 +33,11 @@ export class RegisterPage implements OnInit {
   ngOnInit() {
     this.registerForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
-      email: [
-        '',
-        [Validators.required, Validators.email],
-        [emailDisponibleValidator(this.supabase)]
-      ],
+      email: this.fb.control('', {
+        validators: [Validators.required, Validators.email],
+        asyncValidators: [emailDisponibleValidator(this.supabase)],
+        updateOn: 'change'
+      }),
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
@@ -47,7 +47,7 @@ export class RegisterPage implements OnInit {
   }
 
   async registrar() {
-    if (this.registerForm.invalid) {
+    if (this.registerForm.invalid || this.registerForm.pending) {
       this.registerForm.markAllAsTouched();
       return;
     }
@@ -59,7 +59,7 @@ export class RegisterPage implements OnInit {
       next: async () => {
         await loader.dismiss();
         const toast = await this.toastCtrl.create({
-          message: 'Cuenta registrada satisfactoriamente.',
+          message: 'Usuario dado de alta satisfactoriamente.',
           duration: 2500,
           color: 'success'
         });
@@ -69,7 +69,7 @@ export class RegisterPage implements OnInit {
       error: async (err) => {
         await loader.dismiss();
         const toast = await this.toastCtrl.create({
-          message: 'No se pudo registrar: ' + err.message,
+          message: 'Error al registrar: ' + err.message,
           duration: 3000,
           color: 'danger'
         });

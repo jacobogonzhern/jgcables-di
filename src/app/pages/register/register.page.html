@@ -8,42 +8,51 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <div style="max-width: 480px; margin: 0 auto;">
-    <h2>Crear Nueva Cuenta</h2>
+  <div style="max-width: 480px; margin: 20px auto; padding: 20px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); background: #ffffff;">
+    <h2 style="margin-top: 0;">Crear Nueva Cuenta</h2>
+    <p style="color: #666; font-size: 0.9rem;">Formulario con validación asíncrona de email</p>
+
     <form [formGroup]="registerForm" (ngSubmit)="registrar()">
       
-      <ion-item fill="outline" class="ion-margin-bottom">
+      <!-- Campo Nombre -->
+      <ion-item fill="outline" class="ion-margin-bottom" [class.ion-invalid]="registerForm.get('nombre')?.invalid && registerForm.get('nombre')?.touched">
         <ion-label position="floating">Nombre Completo</ion-label>
         <ion-input formControlName="nombre"></ion-input>
-        <ion-note slot="error" *ngIf="registerForm.get('nombre')?.touched && registerForm.get('nombre')?.hasError('required')">
-          El nombre es obligatorio
-        </ion-note>
       </ion-item>
+      <div *ngIf="registerForm.get('nombre')?.touched && registerForm.get('nombre')?.invalid" style="color: #eb445a; font-size: 0.85rem; margin: -10px 0 12px 6px;">
+        El nombre es obligatorio (mínimo 3 caracteres)
+      </div>
 
-      <ion-item fill="outline" class="ion-margin-bottom">
+      <!-- Campo Correo con Validación Asíncrona -->
+      <ion-item fill="outline" class="ion-margin-bottom" [class.ion-invalid]="email?.invalid && email?.touched">
         <ion-label position="floating">Correo Corporativo</ion-label>
         <ion-input type="email" formControlName="email"></ion-input>
         <ion-spinner slot="end" name="dots" *ngIf="email?.pending"></ion-spinner>
-        
-        <ion-note slot="error" *ngIf="email?.touched && email?.hasError('required')">
-          El correo es obligatorio
-        </ion-note>
-        <ion-note slot="error" *ngIf="email?.touched && email?.hasError('email')">
-          Formato de correo no válido
-        </ion-note>
-        <ion-note slot="error" *ngIf="email?.touched && email?.hasError('emailDuplicado')">
-          Este correo ya se encuentra en uso en la base de datos
-        </ion-note>
       </ion-item>
 
-      <ion-item fill="outline" class="ion-margin-bottom">
+      <!-- Mensajes de Error Visibles -->
+      <div *ngIf="email?.touched && email?.invalid" style="margin: -10px 0 14px 6px;">
+        <div *ngIf="email?.hasError('required')" style="color: #eb445a; font-size: 0.85rem;">
+          ⚠️ El correo es obligatorio.
+        </div>
+        <div *ngIf="email?.hasError('email')" style="color: #eb445a; font-size: 0.85rem;">
+          ⚠️ Formato de correo no válido.
+        </div>
+        <div *ngIf="email?.hasError('emailDuplicado')" style="color: #eb445a; font-weight: bold; font-size: 0.88rem; background: #ffebee; padding: 6px 10px; border-radius: 6px; border: 1px solid #ffcdd2;">
+          ❌ Este correo ya se encuentra en uso en la base de datos.
+        </div>
+      </div>
+
+      <!-- Campo Contraseña -->
+      <ion-item fill="outline" class="ion-margin-bottom" [class.ion-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
         <ion-label position="floating">Contraseña</ion-label>
         <ion-input type="password" formControlName="password"></ion-input>
-        <ion-note slot="error" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.hasError('minlength')">
-          Mínimo 6 caracteres
-        </ion-note>
       </ion-item>
+      <div *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid" style="color: #eb445a; font-size: 0.85rem; margin: -10px 0 14px 6px;">
+        La contraseña debe tener al menos 6 caracteres.
+      </div>
 
+      <!-- Botón de Envío -->
       <ion-button expand="block" type="submit" [disabled]="registerForm.invalid || registerForm.pending" class="ion-margin-top">
         Confirmar Alta
       </ion-button>
