@@ -1,2 +1,74 @@
-// For information on how to create your own theme, please refer to:
-// https://ionicframework.com/docs/theming/
+// Tema de JG Cables
+// Colores elegidos para cumplir el contraste mínimo de WCAG AA (4.5:1) sobre fondo claro.
+// https://ionicframework.com/docs/theming/colors
+
+:root {
+  --ion-font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  --ion-background-color: #f5f2ed;
+  --ion-background-color-rgb: 245, 242, 237;
+  --ion-text-color: #1c2a33;
+  --ion-text-color-rgb: 28, 42, 51;
+
+  --ion-toolbar-background: #ffffff;
+  --ion-toolbar-color: #1c2a33;
+  --ion-item-background: #ffffff;
+
+  /* Verde petróleo: color principal de la marca */
+  --ion-color-primary: #0e5a63;
+  --ion-color-primary-rgb: 14, 90, 99;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #0c4f57;
+  --ion-color-primary-tint: #266b73;
+
+  /* Cobre: color de acento (los cables) */
+  --ion-color-secondary: #b8501a;
+  --ion-color-secondary-rgb: 184, 80, 26;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #a24617;
+  --ion-color-secondary-tint: #bf622f;
+
+  --ion-color-tertiary: #5b4b8a;
+  --ion-color-tertiary-rgb: 91, 75, 138;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #504279;
+  --ion-color-tertiary-tint: #6b5d96;
+
+  --ion-color-success: #1f7a4d;
+  --ion-color-success-rgb: 31, 122, 77;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #1b6b44;
+  --ion-color-success-tint: #35875f;
+
+  --ion-color-warning: #d99a1e;
+  --ion-color-warning-rgb: 217, 154, 30;
+  --ion-color-warning-contrast: #1c2a33;
+  --ion-color-warning-contrast-rgb: 28, 42, 51;
+  --ion-color-warning-shade: #bf881a;
+  --ion-color-warning-tint: #dda435;
+
+  --ion-color-danger: #b42318;
+  --ion-color-danger-rgb: 180, 35, 24;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #9e1f15;
+  --ion-color-danger-tint: #bc392f;
+
+  --ion-color-medium: #5c6b73;
+  --ion-color-medium-rgb: 92, 107, 115;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #515e65;
+  --ion-color-medium-tint: #6c7a81;
+
+  --ion-color-light: #ebe6de;
+  --ion-color-light-rgb: 235, 230, 222;
+  --ion-color-light-contrast: #1c2a33;
+  --ion-color-light-contrast-rgb: 28, 42, 51;
+  --ion-color-light-shade: #cfcac3;
+  --ion-color-light-tint: #ede9e1;
+}

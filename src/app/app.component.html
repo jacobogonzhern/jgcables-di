@@ -1,31 +1,67 @@
 <ion-app>
-  <ion-split-pane contentId="main-content">
-    <ion-menu contentId="main-content" type="overlay">
+  <ion-split-pane contentId="main-content" when="md" [disabled]="(auth.user$ | async) === null">
+    <ion-menu contentId="main-content" type="overlay" [disabled]="(auth.user$ | async) === null">
       <ion-content>
-        <ion-list id="inbox-list">
-          <ion-list-header>Inbox</ion-list-header>
-          <ion-note>hi&#64;ionicframework.com</ion-note>
+        <div class="marca">
+          <ion-icon name="git-network-outline" aria-hidden="true"></ion-icon>
+          <div>
+            <p class="marca-nombre">JG Cables</p>
+            <p class="marca-sub">Gestión interna</p>
+          </div>
+        </div>
 
-          @for (p of appPages; track p; let i = $index) {
-            <ion-menu-toggle auto-hide="false">
-              <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
-                <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
-                <ion-label>{{ p.title }}</ion-label>
+        <nav aria-label="Menú principal">
+          <ion-list id="navigation-list" lines="none">
+            @if (auth.user$ | async; as user) {
+              <p class="usuario">
+                {{ user.nombre || user.email }}
+                <span class="rol">{{ user.rol === 'admin' ? 'Administrador' : 'Usuario' }}</span>
+              </p>
+
+              <ion-menu-toggle auto-hide="false">
+                <ion-item routerLink="/pedidos" routerLinkActive="selected" [detail]="false">
+                  <ion-icon slot="start" name="receipt-outline" aria-hidden="true"></ion-icon>
+                  <ion-label>Pedidos</ion-label>
+                </ion-item>
+              </ion-menu-toggle>
+
+              @if (user.rol === 'admin') {
+                <ion-menu-toggle auto-hide="false">
+                  <ion-item routerLink="/dashboard" routerLinkActive="selected" [detail]="false">
+                    <ion-icon slot="start" name="bar-chart-outline" aria-hidden="true"></ion-icon>
+                    <ion-label>Dashboard</ion-label>
+                  </ion-item>
+                </ion-menu-toggle>
+
+                <ion-menu-toggle auto-hide="false">
+                  <ion-item routerLink="/usuarios" routerLinkActive="selected" [detail]="false">
+                    <ion-icon slot="start" name="people-outline" aria-hidden="true"></ion-icon>
+                    <ion-label>Usuarios</ion-label>
+                  </ion-item>
+                </ion-menu-toggle>
+              }
+
+              <ion-menu-toggle auto-hide="false">
+                <ion-item routerLink="/ayuda" routerLinkActive="selected" [detail]="false">
+                  <ion-icon slot="start" name="help-circle-outline" aria-hidden="true"></ion-icon>
+                  <ion-label>Ayuda</ion-label>
+                </ion-item>
+              </ion-menu-toggle>
+
+              <ion-item button (click)="logout()" [detail]="false" class="salir">
+                <ion-icon slot="start" name="log-out-outline" aria-hidden="true"></ion-icon>
+                <ion-label>Cerrar sesión</ion-label>
               </ion-item>
-            </ion-menu-toggle>
-          }
-        </ion-list>
-
-        <ion-list id="labels-list">
-          <ion-list-header>Labels</ion-list-header>
-
-          @for (label of labels; track label) {
-            <ion-item lines="none">
-              <ion-icon aria-hidden="true" slot="start" ios="bookmark-outline" md="bookmark-sharp"></ion-icon>
-              <ion-label>{{ label }}</ion-label>
-            </ion-item>
-          }
-        </ion-list>
+            } @else {
+              <ion-menu-toggle auto-hide="false">
+                <ion-item routerLink="/login" routerLinkActive="selected" [detail]="false">
+                  <ion-icon slot="start" name="log-in-outline" aria-hidden="true"></ion-icon>
+                  <ion-label>Iniciar sesión</ion-label>
+                </ion-item>
+              </ion-menu-toggle>
+            }
+          </ion-list>
+        </nav>
       </ion-content>
     </ion-menu>
     <ion-router-outlet id="main-content"></ion-router-outlet>

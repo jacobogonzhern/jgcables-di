@@ -1,0 +1,42 @@
+<ion-content class="auth-content">
+  <main class="auth-wrapper">
+    <div class="auth-marca">
+      <ion-icon name="git-network-outline" aria-hidden="true"></ion-icon>
+      <h1>JG Cables</h1>
+      <p>Gestión de pedidos y clientes</p>
+    </div>
+
+    <section class="auth-card" aria-labelledby="titulo-login">
+      <h2 id="titulo-login">Iniciar sesión</h2>
+      <p class="subtitulo">Introduce tus credenciales para acceder</p>
+
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <ion-input
+          type="email"
+          formControlName="email"
+          label="Correo electrónico"
+          labelPlacement="floating"
+          fill="outline"
+          autocomplete="email"
+          errorText="Introduce un correo válido."
+        ></ion-input>
+
+        <ion-input
+          type="password"
+          formControlName="password"
+          label="Contraseña"
+          labelPlacement="floating"
+          fill="outline"
+          autocomplete="current-password"
+          errorText="La contraseña es obligatoria."
+        ></ion-input>
+
+        <ion-button expand="block" type="submit" color="secondary" [disabled]="loginForm.invalid">
+          Entrar
+        </ion-button>
+      </form>
+
+      <p class="enlace">¿No tienes cuenta? <a routerLink="/register">Regístrate</a></p>
+    </section>
+  </main>
+</ion-content>

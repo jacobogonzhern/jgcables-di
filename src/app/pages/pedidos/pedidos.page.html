@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button aria-label="Abrir menú"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Pedidos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="page-heading">
+    <span class="etiqueta">Tiempo real</span>
+    <h1>Gestión de pedidos</h1>
+    <p>Consulta, busca y exporta los pedidos. El listado se actualiza solo cuando cambia un pedido.</p>
+  </div>
+
+  <div class="page-body">
+    @if (cargandoPedidos()) {
+      <p role="status"><ion-spinner name="crescent" aria-hidden="true"></ion-spinner> Cargando pedidos...</p>
+    }
+
+    @if (errorPedidos()) {
+      <p class="mensaje-error" role="alert">{{ errorPedidos() }}</p>
+    }
+
+    <div class="toolbar-acciones">
+      <ion-button color="secondary" (click)="exportarPdf()" [disabled]="cargandoPedidos()">
+        <ion-icon slot="start" name="document-text-outline" aria-hidden="true"></ion-icon>
+        Exportar PDF
+      </ion-button>
+      <ion-button fill="outline" (click)="exportarCsv()" [disabled]="cargandoPedidos()">
+        <ion-icon slot="start" name="download-outline" aria-hidden="true"></ion-icon>
+        Exportar CSV
+      </ion-button>
+    </div>
+
+    <!-- Componente reutilizable de tabla -->
+    <app-data-table
+      [columns]="columnas"
+      [data]="filas()"
+      (rowSelect)="onPedidoSelect($event)"
+      (searchChanged)="onSearchPedidos($event)"
+    ></app-data-table>
+  </div>
+</ion-content>

@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button aria-label="Abrir menú"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Usuarios</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="page-heading">
+    <span class="etiqueta">Administración</span>
+    <h1>Usuarios del sistema</h1>
+    <p>Personas dadas de alta en la aplicación. Las contraseñas las gestiona Firebase y no se guardan aquí.</p>
+  </div>
+
+  <div class="page-body">
+    @if (cargando()) {
+      <p role="status"><ion-spinner name="crescent" aria-hidden="true"></ion-spinner> Cargando usuarios...</p>
+    } @else if (error()) {
+      <p class="mensaje-error" role="alert">{{ error() }}</p>
+    } @else {
+      <app-data-table [columns]="columnas" [data]="usuarios()"></app-data-table>
+    }
+  </div>
+</ion-content>
