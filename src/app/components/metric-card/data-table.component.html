@@ -1,0 +1,107 @@
+<ion-card class="table-card">
+
+  <ion-card-content>
+
+    <!-- Buscador -->
+    <ion-searchbar
+      placeholder="Buscar..."
+      [debounce]="0"
+      [value]="searchTerm"
+      (ionInput)="onSearchInput($any($event).detail.value ?? '')"
+    ></ion-searchbar>
+
+    <!-- Número de filas por página -->
+    <div class="table-options">
+
+      <ion-label>Filas por página:</ion-label>
+
+      <ion-select
+        [value]="pageSize"
+        interface="popover"
+        (ionChange)="onPageSizeChange($event.detail.value)"
+      >
+        <ion-select-option [value]="5">5</ion-select-option>
+        <ion-select-option [value]="10">10</ion-select-option>
+        <ion-select-option [value]="20">20</ion-select-option>
+      </ion-select>
+
+    </div>
+
+    <!-- Tabla -->
+    <div class="table-container">
+
+      <table>
+
+        <thead>
+          <tr>
+            @for (column of columns; track column.key) {
+              <th>{{ column.label }}</th>
+            }
+          </tr>
+        </thead>
+
+        <tbody>
+
+          @for (row of paginatedData; track $index) {
+            <tr
+              tabindex="0"
+              (click)="selectRow(row)"
+              (keydown.enter)="selectRow(row)"
+              (keydown.space)="selectRow(row); $event.preventDefault()"
+            >
+              @for (column of columns; track column.key) {
+                <td>{{ row[column.key] }}</td>
+              }
+            </tr>
+          }
+
+          <!-- Mensaje cuando no existen resultados -->
+          @if (paginatedData.length === 0) {
+            <tr>
+              <td [attr.colspan]="columns.length || 1">
+                No se han encontrado resultados.
+              </td>
+            </tr>
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+    <!-- Paginación -->
+    <div class="pagination">
+
+      <ion-button
+        fill="outline"
+        size="small"
+        [disabled]="currentPage <= 1"
+        (click)="previousPage()"
+      >
+        Anterior
+      </ion-button>
+
+      <span>
+        Página {{ currentPage }} de {{ totalPages }}
+      </span>
+
+      <ion-button
+        fill="outline"
+        size="small"
+        [disabled]="currentPage >= totalPages"
+        (click)="nextPage()"
+      >
+        Siguiente
+      </ion-button>
+
+    </div>
+
+    <!-- Número total de resultados -->
+    <p class="results-count">
+      Total de resultados: {{ filteredData.length }}
+    </p>
+
+  </ion-card-content>
+
+</ion-card>

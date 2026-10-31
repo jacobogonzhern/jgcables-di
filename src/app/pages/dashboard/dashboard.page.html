@@ -1,0 +1,82 @@
+<ion-header>
+
+  <ion-toolbar color="primary">
+
+    <ion-title>
+      Dashboard
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button routerLink="/dashboard">Dashboard</ion-button>
+      <ion-button routerLink="/pedidos">Pedidos</ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <h1>Panel de control</h1>
+
+  <p>
+    Resumen general de la actividad.
+  </p>
+
+  @if (loading) {
+    <div class="loading-state" role="status">
+      <ion-spinner name="crescent"></ion-spinner>
+      <span>Cargando datos...</span>
+    </div>
+  } @else {
+    <!-- Tarjetas de métricas -->
+    <div class="metrics-grid">
+
+      <!-- Tarjeta de pedidos -->
+      <app-metric-card
+        title="Total de pedidos"
+        [value]="totalPedidos"
+        icon="cart-outline"
+        color="primary"
+        (cardClick)="onMetricCardClick('pedidos')"
+      ></app-metric-card>
+
+      <!-- Tarjeta de clientes -->
+      <app-metric-card
+        title="Total de clientes"
+        [value]="totalClientes"
+        icon="people-outline"
+        color="success"
+        (cardClick)="onMetricCardClick('clientes')"
+      ></app-metric-card>
+
+      <!-- Tarjeta de ingresos -->
+      <app-metric-card
+        title="Ingresos (€)"
+        [value]="ingresos"
+        icon="cash-outline"
+        color="tertiary"
+        (cardClick)="onMetricCardClick('ingresos')"
+      ></app-metric-card>
+
+      <!-- Tarjeta de pedidos pendientes -->
+      <app-metric-card
+        title="Pedidos pendientes"
+        [value]="pedidosPendientes"
+        icon="time-outline"
+        color="warning"
+        (cardClick)="onMetricCardClick('pendientes')"
+      ></app-metric-card>
+
+    </div>
+  }
+
+</ion-content>
+
+<ion-toast
+  [isOpen]="errorToastOpen"
+  [message]="errorToastMessage"
+  color="danger"
+  duration="3500"
+  (didDismiss)="errorToastOpen = false"
+></ion-toast>

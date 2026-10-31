@@ -2,13 +2,20 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: '',
-    redirectTo: 'folder/Inbox',
-    pathMatch: 'full',
+    path: 'dashboard',
+    loadComponent: () =>
+      import('./pages/dashboard/dashboard.page')
+        .then(m => m.DashboardPage)
   },
   {
-    path: 'folder/:folder',
+    path: 'pedidos',
     loadComponent: () =>
-      import('./folder/folder.page').then((m) => m.FolderPage),
+      import('./pages/pedidos/pedidos.page')
+        .then(m => m.PedidosPage)
   },
+  {
+    path: '',
+    redirectTo: 'dashboard',
+    pathMatch: 'full'
+  }
 ];

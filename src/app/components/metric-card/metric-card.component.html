@@ -1,0 +1,28 @@
+<ion-card
+  button="true"
+  [color]="color"
+  class="metric-card"
+  (click)="onCardClick()"
+>
+  <ion-card-content>
+
+    <div class="metric-header">
+
+      <div class="metric-info">
+        <ion-text>
+          <h2>{{ title }}</h2>
+        </ion-text>
+
+        <h1>{{ value }}</h1>
+      </div>
+
+      <ion-icon
+        [name]="icon"
+        class="metric-icon"
+        aria-hidden="true"
+      ></ion-icon>
+
+    </div>
+
+  </ion-card-content>
+</ion-card>

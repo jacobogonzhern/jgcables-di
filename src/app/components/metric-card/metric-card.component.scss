@@ -1,0 +1,35 @@
+.metric-card {
+  margin: 10px;
+  min-height: 130px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-3px);
+}
+
+.metric-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.metric-info h2 {
+  font-size: 15px;
+  font-weight: 500;
+  margin: 0 0 12px;
+}
+
+.metric-info h1 {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.metric-icon {
+  font-size: 40px;
+  flex-shrink: 0;
+}
