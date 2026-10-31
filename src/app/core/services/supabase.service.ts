@@ -18,10 +18,10 @@ export interface Cliente {
   telefono?: string;
 }
 
+/** Datos públicos de un usuario (la contraseña nunca se guarda aquí, la gestiona Firebase). */
 export interface UsuarioRegistro {
   nombre: string;
   email: string;
-  password: string;
 }
 
 @Injectable({
@@ -32,7 +32,6 @@ export class SupabaseService {
   private readonly apiUrl = `${environment.supabase.url}/rest/v1`;
   private readonly headers = new HttpHeaders({
     apikey: environment.supabase.anonKey,
-    Authorization: `Bearer ${environment.supabase.anonKey}`,
     'Content-Type': 'application/json'
   });
 
@@ -48,6 +47,13 @@ export class SupabaseService {
     });
   }
 
+  /** Usuarios registrados en la aplicación (solo nombre y email). */
+  public getUsuarios(): Observable<UsuarioRegistro[]> {
+    return this.http.get<UsuarioRegistro[]>(`${this.apiUrl}/usuarios?select=nombre,email&order=nombre`, {
+      headers: this.headers
+    });
+  }
+
   public checkEmailRegistrado(email: string): Observable<boolean> {
     const normalizado = email.trim().toLowerCase();
     const url = `${this.apiUrl}/usuarios?select=email&email=eq.${encodeURIComponent(normalizado)}`;
@@ -58,7 +64,11 @@ export class SupabaseService {
   }
 
   public insertarUsuario(datos: UsuarioRegistro): Observable<unknown> {
-    return this.http.post(`${this.apiUrl}/usuarios`, datos, {
+    const usuario: UsuarioRegistro = {
+      nombre: datos.nombre,
+      email: datos.email.trim().toLowerCase()
+    };
+    return this.http.post(`${this.apiUrl}/usuarios`, usuario, {
       headers: this.headers.set('Prefer', 'return=representation')
     });
   }

@@ -1,80 +1,63 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/login"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Alta de Usuario - JG Cables</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="auth-content">
+  <main class="auth-wrapper">
+    <div class="auth-marca">
+      <ion-icon name="git-network-outline" aria-hidden="true"></ion-icon>
+      <h1>JG Cables</h1>
+      <p>Alta de nuevo usuario</p>
+    </div>
 
-<ion-content class="ion-padding">
-  <div style="max-width: 480px; margin: 20px auto; padding: 20px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); background: #ffffff;">
-    <h2 style="margin-top: 0;">Crear Nueva Cuenta</h2>
-    <p style="color: #666; font-size: 0.9rem;">Formulario con validación asíncrona de email</p>
+    <section class="auth-card" aria-labelledby="titulo-registro">
+      <h2 id="titulo-registro">Crear cuenta</h2>
+      <p class="subtitulo">El correo se comprueba automáticamente para evitar duplicados</p>
 
-    <form [formGroup]="registerForm" (ngSubmit)="registrar()">
-      
-      <!-- Campo Nombre -->
-      <ion-item fill="outline" class="ion-margin-bottom" [class.ion-invalid]="registerForm.get('nombre')?.invalid && registerForm.get('nombre')?.touched">
-        <ion-label position="floating">Nombre Completo</ion-label>
-        <ion-input formControlName="nombre"></ion-input>
-      </ion-item>
-      @if (registerForm.get('nombre')?.touched && registerForm.get('nombre')?.invalid) {
-        <div style="color: #eb445a; font-size: 0.85rem; margin: -10px 0 12px 6px;">
-          El nombre es obligatorio (mínimo 3 caracteres)
-        </div>
-      }
+      <form [formGroup]="registerForm" (ngSubmit)="registrar()">
 
-      <!-- Campo Correo con Validación Asíncrona -->
-      <ion-item fill="outline" class="ion-margin-bottom" [class.ion-invalid]="email.invalid && email.touched">
-        <ion-label position="floating">Correo Corporativo</ion-label>
-        <ion-input type="email" formControlName="email"></ion-input>
-        @if (email.pending) {
-          <ion-spinner slot="end" name="dots"></ion-spinner>
+        <!-- Nombre -->
+        <ion-input formControlName="nombre" label="Nombre completo" labelPlacement="floating"
+          fill="outline" autocomplete="name"></ion-input>
+        @if (registerForm.get('nombre')?.touched && registerForm.get('nombre')?.invalid) {
+          <p class="aviso error">El nombre es obligatorio (mínimo 3 caracteres).</p>
         }
-      </ion-item>
 
-      <!-- Mensajes de Error Visibles -->
-      @if (email.touched && email.invalid) {
-        <div style="margin: -10px 0 14px 6px;">
-          @if (email.hasError('required')) {
-            <div style="color: #eb445a; font-size: 0.85rem;">
-              ⚠️ El correo es obligatorio.
-            </div>
-          }
-          @if (email.hasError('email')) {
-            <div style="color: #eb445a; font-size: 0.85rem;">
-              ⚠️ Formato de correo no válido.
-            </div>
-          }
-          @if (email.hasError('emailDuplicado')) {
-            <div style="color: #eb445a; font-weight: bold; font-size: 0.88rem; background: #ffebee; padding: 6px 10px; border-radius: 6px; border: 1px solid #ffcdd2;">
-              ❌ Este correo ya se encuentra en uso en la base de datos.
-            </div>
-          }
-          @if (email.hasError('emailCheckFailed')) {
-            <div style="color: #eb445a; font-size: 0.85rem;">
-              No se pudo comprobar el correo. Inténtalo de nuevo.
-            </div>
-          }
-        </div>
-      }
+        <!-- Correo con validación asíncrona -->
+        <ion-input type="email" formControlName="email" label="Correo corporativo" labelPlacement="floating"
+          fill="outline" autocomplete="email"></ion-input>
+        @if (email.pending) {
+          <p class="aviso" role="status">
+            <ion-spinner name="dots" aria-hidden="true"></ion-spinner> Comprobando si el correo ya existe…
+          </p>
+        }
+        @if (email.touched && email.invalid) {
+          <div role="alert">
+            @if (email.hasError('required')) {
+              <p class="aviso error">El correo es obligatorio.</p>
+            }
+            @if (email.hasError('email')) {
+              <p class="aviso error">El formato del correo no es válido.</p>
+            }
+            @if (email.hasError('emailDuplicado')) {
+              <p class="aviso error">Este correo ya está registrado.</p>
+            }
+            @if (email.hasError('emailCheckFailed')) {
+              <p class="aviso error">No se pudo comprobar el correo. Inténtalo de nuevo.</p>
+            }
+          </div>
+        }
 
-      <!-- Campo Contraseña -->
-      <ion-item fill="outline" class="ion-margin-bottom" [class.ion-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
-        <ion-label position="floating">Contraseña</ion-label>
-        <ion-input type="password" formControlName="password"></ion-input>
-      </ion-item>
-      @if (registerForm.get('password')?.touched && registerForm.get('password')?.invalid) {
-        <div style="color: #eb445a; font-size: 0.85rem; margin: -10px 0 14px 6px;">
-          La contraseña debe tener al menos 6 caracteres.
-        </div>
-      }
+        <!-- Contraseña -->
+        <ion-input type="password" formControlName="password" label="Contraseña" labelPlacement="floating"
+          fill="outline" autocomplete="new-password"></ion-input>
+        @if (registerForm.get('password')?.touched && registerForm.get('password')?.invalid) {
+          <p class="aviso error">La contraseña debe tener al menos 6 caracteres.</p>
+        }
 
-      <!-- Botón de Envío -->
-      <ion-button expand="block" type="submit" [disabled]="registerForm.invalid || registerForm.pending" class="ion-margin-top">
-        Confirmar Alta
-      </ion-button>
-    </form>
-  </div>
+        <ion-button expand="block" type="submit" color="secondary"
+          [disabled]="registerForm.invalid || registerForm.pending">
+          Crear cuenta
+        </ion-button>
+      </form>
+
+      <p class="enlace">¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>
+    </section>
+  </main>
 </ion-content>

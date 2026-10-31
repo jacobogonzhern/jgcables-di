@@ -72,3 +72,6 @@ Thumbs.db
 # Logs de Firebase CLI
 firebase-debug.log
 *.log
+
+# Entorno local de Supabase (la app usa el proyecto en la nube)
+supabase/

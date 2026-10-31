@@ -1,13 +1,16 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {
-  IonHeader, IonToolbar, IonTitle, IonContent, IonItem,
-  IonLabel, IonInput, IonButton, IonSpinner,
-  IonButtons, IonBackButton, LoadingController, ToastController
+  IonContent, IonInput, IonButton, IonSpinner, IonIcon, LoadingController, ToastController
 } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { gitNetworkOutline } from 'ionicons/icons';
+import { firstValueFrom } from 'rxjs';
 import { emailDisponibleValidator } from '../../core/validators/async-email.validator';
+import { AuthService } from '../../core/services/auth.service';
 import { SupabaseService } from '../../core/services/supabase.service';
 
 @Component({
@@ -15,20 +18,25 @@ import { SupabaseService } from '../../core/services/supabase.service';
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
   imports: [
-    CommonModule, ReactiveFormsModule,
-    IonHeader, IonToolbar, IonTitle, IonContent, IonItem,
-    IonLabel, IonInput, IonButton, IonSpinner,
-    IonButtons, IonBackButton
+    CommonModule, ReactiveFormsModule, RouterLink,
+    IonContent, IonInput, IonButton, IonSpinner, IonIcon
   ]
 })
 export class RegisterPage implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly supabase = inject(SupabaseService);
+  private readonly auth = inject(AuthService);
+  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
   private readonly loadingCtrl = inject(LoadingController);
   private readonly toastCtrl = inject(ToastController);
 
   public registerForm!: FormGroup;
+
+  constructor() {
+    addIcons({ gitNetworkOutline });
+  }
 
   ngOnInit() {
     this.registerForm = this.fb.group({
@@ -40,6 +48,12 @@ export class RegisterPage implements OnInit {
       }),
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
+
+    // La app funciona sin Zone.js: cuando termina la validación asíncrona
+    // se avisa a Angular para que repinte el estado (comprobando / error / válido).
+    this.email.statusChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.cdr.markForCheck());
   }
 
   get email(): AbstractControl {
@@ -55,26 +69,30 @@ export class RegisterPage implements OnInit {
     const loader = await this.loadingCtrl.create({ message: 'Registrando usuario...' });
     await loader.present();
 
-    this.supabase.insertarUsuario(this.registerForm.value).subscribe({
-      next: async () => {
-        await loader.dismiss();
-        const toast = await this.toastCtrl.create({
-          message: 'Usuario dado de alta satisfactoriamente.',
-          duration: 2500,
-          color: 'success'
-        });
-        toast.present();
-        this.router.navigate(['/login']);
-      },
-      error: async (err) => {
-        await loader.dismiss();
-        const toast = await this.toastCtrl.create({
-          message: 'Error al registrar: ' + err.message,
-          duration: 3000,
-          color: 'danger'
-        });
-        toast.present();
-      }
-    });
+    const { nombre, email, password } = this.registerForm.value;
+
+    try {
+      // 1. La cuenta y la contraseña las gestiona Firebase Authentication (nunca se guardan en texto plano).
+      await this.auth.registrar(nombre, email, password);
+      // 2. Se guarda el email (sin contraseña) en Supabase para la validación asíncrona de duplicados.
+      await firstValueFrom(this.supabase.insertarUsuario({ nombre, email }));
+
+      await loader.dismiss();
+      const toast = await this.toastCtrl.create({
+        message: 'Usuario dado de alta correctamente. Ya puedes iniciar sesión.',
+        duration: 2500,
+        color: 'success'
+      });
+      await toast.present();
+      await this.router.navigate(['/login']);
+    } catch (error) {
+      await loader.dismiss();
+      const toast = await this.toastCtrl.create({
+        message: 'Error al registrar: ' + (error instanceof Error ? error.message : 'inténtalo de nuevo.'),
+        duration: 3000,
+        color: 'danger'
+      });
+      await toast.present();
+    }
   }
 }

@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
   firebase: {
-     apiKey: 'AIzaSyCxVQTtwqRHk7juiEj1L4hte1cbJxXFhy8',
+    apiKey: 'AIzaSyCxVQTtwqRHk7juiEj1L4hte1cbJxXFhy8',
     authDomain: 'jgcables-di.firebaseapp.com',
     projectId: 'jgcables-di',
     storageBucket: 'jgcables-di.firebasestorage.app',

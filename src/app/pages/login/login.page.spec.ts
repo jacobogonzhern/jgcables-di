@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { LoginPage } from './login.page';
+import { AuthService } from '../../core/services/auth.service';
 
 describe('LoginPage', () => {
   let component: LoginPage;
@@ -9,7 +10,10 @@ describe('LoginPage', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [LoginPage],
-      providers: [provideRouter([])]
+      providers: [
+        provideRouter([]),
+        { provide: AuthService, useValue: { login: () => Promise.resolve() } }
+      ]
     }).compileComponents();
     fixture = TestBed.createComponent(LoginPage);
     component = fixture.componentInstance;
