@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button aria-label="Abrir menú"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Ayuda</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="page-heading">
+    <span class="etiqueta">Manual de usuario</span>
+    <h1>¿Cómo funciona la aplicación?</h1>
+    <p>Pulsa cada apartado para ver las instrucciones.</p>
+  </div>
+
+  <div class="page-body">
+    <ion-accordion-group>
+      <ion-accordion value="acceso">
+        <ion-item slot="header"><ion-label>Acceso y roles</ion-label></ion-item>
+        <div class="ion-padding" slot="content">
+          <p>Entra con tu correo y contraseña. Si no tienes cuenta, pulsa «Regístrate» en la pantalla de inicio.</p>
+          <ul>
+            <li><strong>Usuario:</strong> puede consultar, buscar y exportar los pedidos.</li>
+            <li><strong>Administrador:</strong> además ve el Dashboard y la lista de usuarios.</li>
+          </ul>
+        </div>
+      </ion-accordion>
+
+      <ion-accordion value="registro">
+        <ion-item slot="header"><ion-label>Crear una cuenta</ion-label></ion-item>
+        <div class="ion-padding" slot="content">
+          <p>Rellena nombre, correo y contraseña (mínimo 6 caracteres). Mientras escribes el correo, la aplicación comprueba si ya existe y te avisa antes de enviar el formulario.</p>
+        </div>
+      </ion-accordion>
+
+      <ion-accordion value="pedidos">
+        <ion-item slot="header"><ion-label>Pedidos</ion-label></ion-item>
+        <div class="ion-padding" slot="content">
+          <p>La tabla se actualiza sola cuando cambia un pedido. Usa el buscador para filtrar por cliente o estado, cambia las filas por página y pulsa una fila para ver su resumen.</p>
+        </div>
+      </ion-accordion>
+
+      <ion-accordion value="informes">
+        <ion-item slot="header"><ion-label>Exportar informes</ion-label></ion-item>
+        <div class="ion-padding" slot="content">
+          <p>En Pedidos pulsa «Exportar PDF» para descargar un informe con cabecera de la empresa, o «Exportar CSV» para abrirlo en Excel o LibreOffice.</p>
+        </div>
+      </ion-accordion>
+
+      <ion-accordion value="dashboard">
+        <ion-item slot="header"><ion-label>Dashboard (administrador)</ion-label></ion-item>
+        <div class="ion-padding" slot="content">
+          <p>Muestra los indicadores principales y dos gráficos. Puedes filtrar por estado con el desplegable o pulsando un sector del gráfico circular. Pulsa una tarjeta para ir a Pedidos.</p>
+        </div>
+      </ion-accordion>
+
+      <ion-accordion value="teclado">
+        <ion-item slot="header"><ion-label>Uso con teclado</ion-label></ion-item>
+        <div class="ion-padding" slot="content">
+          <p>Usa <kbd>Tab</kbd> para avanzar, <kbd>Mayús</kbd> + <kbd>Tab</kbd> para retroceder y <kbd>Enter</kbd> para pulsar botones o seleccionar filas de la tabla.</p>
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
+  </div>
+</ion-content>

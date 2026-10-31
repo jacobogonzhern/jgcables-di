@@ -1,0 +1,15 @@
+<button
+  type="button"
+  class="metric-card"
+  [attr.data-color]="color"
+  [attr.aria-label]="title + ': ' + value"
+  (click)="onCardClick()"
+>
+  <span class="metric-icon">
+    <ion-icon [name]="icon" aria-hidden="true"></ion-icon>
+  </span>
+  <span class="metric-info">
+    <span class="metric-title">{{ title }}</span>
+    <span class="metric-value">{{ value }}</span>
+  </span>
+</button>
