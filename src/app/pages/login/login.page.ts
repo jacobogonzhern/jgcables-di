@@ -1,11 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
-  IonHeader, IonToolbar, IonTitle, IonContent, IonItem,
-  IonLabel, IonInput, IonButton, LoadingController, ToastController
+  IonContent, IonInput, IonButton, IonIcon, LoadingController, ToastController
 } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { gitNetworkOutline } from 'ionicons/icons';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
@@ -13,19 +13,23 @@ import { AuthService } from '../../core/services/auth.service';
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   imports: [
-    CommonModule, ReactiveFormsModule, RouterLink,
-    IonHeader, IonToolbar, IonTitle, IonContent, IonItem,
-    IonLabel, IonInput, IonButton
+    ReactiveFormsModule, RouterLink,
+    IonContent, IonInput, IonButton, IonIcon
   ]
 })
 export class LoginPage implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly loadingCtrl = inject(LoadingController);
   private readonly toastCtrl = inject(ToastController);
 
   public loginForm!: FormGroup;
+
+  constructor() {
+    addIcons({ gitNetworkOutline });
+  }
 
   ngOnInit() {
     this.loginForm = this.fb.group({
@@ -34,42 +38,32 @@ export class LoginPage implements OnInit {
     });
   }
 
+  /** Inicia sesión con Firebase y redirige según el rol del usuario. */
   async login() {
-    if (this.loginForm.invalid) return;
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
 
     const loader = await this.loadingCtrl.create({ message: 'Autenticando...' });
     await loader.present();
 
     const { email, password } = this.loginForm.value;
 
-    setTimeout(async () => {
+    try {
+      const usuario = await this.auth.login(email, password);
       await loader.dismiss();
-      if (email === 'admin@jgcables.example' && password === 'Admin123!') {
-        this.auth.loginUser({
-          uid: 'adm-001',
-          email,
-          nombre: 'Administrador General',
-          rol: 'admin',
-          token: 'token-admin-simulado'
-        });
-        this.router.navigate(['/dashboard']);
-      } else if (email === 'usuario@jgcables.example' && password === 'User123!') {
-        this.auth.loginUser({
-          uid: 'usr-002',
-          email,
-          nombre: 'Operador Estándar',
-          rol: 'usuario',
-          token: 'token-usuario-simulado'
-        });
-        this.router.navigate(['/pedidos']);
-      } else {
-        const toast = await this.toastCtrl.create({
-          message: 'Credenciales inválidas. Usa las cuentas de prueba.',
-          duration: 3000,
-          color: 'danger'
-        });
-        toast.present();
-      }
-    }, 500);
+      const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+      const destino = returnUrl ?? (usuario.rol === 'admin' ? '/dashboard' : '/pedidos');
+      await this.router.navigateByUrl(destino, { replaceUrl: true });
+    } catch (error) {
+      await loader.dismiss();
+      const toast = await this.toastCtrl.create({
+        message: error instanceof Error ? error.message : 'No se pudo iniciar sesión.',
+        duration: 3000,
+        color: 'danger'
+      });
+      await toast.present();
+    }
   }
 }
