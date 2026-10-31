@@ -1,49 +1,48 @@
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideRouter, Router, RouterLink } from '@angular/router';
+import { provideRouter, RouterLink } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 
 import { AppComponent } from './app.component';
+import { AuthService } from './core/services/auth.service';
+import { Usuario } from './core/models/user.model';
 
 describe('AppComponent', () => {
+  let user$: BehaviorSubject<Usuario | null>;
+
   beforeEach(async () => {
-    localStorage.removeItem('jgcables_sesion');
+    user$ = new BehaviorSubject<Usuario | null>(null);
     await TestBed.configureTestingModule({
       imports: [AppComponent],
-      providers: [provideRouter([])]
+      providers: [
+        provideRouter([]),
+        { provide: AuthService, useValue: { user$, logout: () => Promise.resolve() } }
+      ]
     }).compileComponents();
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
-
-  it('should have menu labels', async () => {
+  function enlacesDelMenu(): number {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
-    // ion-label is a scoped Stencil component whose slot content is relocated
-    // asynchronously, so wait for hydration before reading textContent (ROU-10799).
-    await fixture.whenStable();
-    const app = fixture.nativeElement;
-    const menuItems = app.querySelectorAll('ion-label');
-    expect(menuItems.length).toEqual(2);
-    expect(menuItems[1].innerHTML).toContain('Iniciar Sesión');
+    return fixture.debugElement.queryAll(By.directive(RouterLink)).length;
+  }
+
+  it('crea la aplicación', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('should have urls', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const app = fixture.nativeElement;
-    expect(app.querySelectorAll('ion-item').length).toEqual(1);
-    // Ionic applies the rendered href through its own async write queue, so
-    // reading the DOM attribute is flaky (FW-6264). Assert the routerLink
-    // binding directly, which resolves synchronously.
-    const router = TestBed.inject(Router);
-    const links = fixture.debugElement
-      .queryAll(By.directive(RouterLink))
-      .map((el) => el.injector.get(RouterLink));
-    expect(links.length).toEqual(1);
-    expect(router.serializeUrl(links[0].urlTree!)).toEqual('/login');
+  it('sin sesión solo muestra el enlace de iniciar sesión', () => {
+    expect(enlacesDelMenu()).toBe(1);
+  });
+
+  it('un usuario estándar ve Pedidos y Ayuda', () => {
+    user$.next({ uid: '1', email: 'usuario@jgcables.com', nombre: 'Usuario', rol: 'usuario' });
+    expect(enlacesDelMenu()).toBe(2);
+  });
+
+  it('un administrador ve Pedidos, Dashboard, Usuarios y Ayuda', () => {
+    user$.next({ uid: '2', email: 'admin@jgcables.com', nombre: 'Admin', rol: 'admin' });
+    expect(enlacesDelMenu()).toBe(4);
   });
 });

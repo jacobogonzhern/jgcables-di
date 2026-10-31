@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { PedidosPage } from './pedidos.page';
 import { FirebaseService } from '../../core/services/firebase.service';
+import { AuthService } from '../../core/services/auth.service';
 
 describe('PedidosPage', () => {
   let component: PedidosPage;
@@ -13,7 +14,8 @@ describe('PedidosPage', () => {
       imports: [PedidosPage],
       providers: [
         provideRouter([]),
-        { provide: FirebaseService, useValue: { getPedidos: () => of([]) } }
+        { provide: FirebaseService, useValue: { getPedidos: () => of([]) } },
+        { provide: AuthService, useValue: { hasRole: () => false, logout: () => Promise.resolve() } }
       ]
     }).compileComponents();
 

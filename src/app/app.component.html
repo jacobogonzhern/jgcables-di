@@ -1,50 +1,67 @@
 <ion-app>
-  <ion-split-pane contentId="main-content" when="md">
-    <ion-menu contentId="main-content" type="overlay">
+  <ion-split-pane contentId="main-content" when="md" [disabled]="(auth.user$ | async) === null">
+    <ion-menu contentId="main-content" type="overlay" [disabled]="(auth.user$ | async) === null">
       <ion-content>
-        <ion-list id="navigation-list">
-          <ion-list-header>
-            <ion-icon name="hardware-chip-outline" slot="start" color="primary"></ion-icon>
-            <ion-label>JG Cables - Gestión</ion-label>
-          </ion-list-header>
+        <div class="marca">
+          <ion-icon name="git-network-outline" aria-hidden="true"></ion-icon>
+          <div>
+            <p class="marca-nombre">JG Cables</p>
+            <p class="marca-sub">Gestión interna</p>
+          </div>
+        </div>
 
-          @if (auth.user$ | async; as user) {
-            <ion-menu-toggle auto-hide="false">
-              <ion-item routerLink="/pedidos" routerLinkActive="selected" lines="none">
-                <ion-icon slot="start" name="receipt-outline"></ion-icon>
-                <ion-label>Gestión de Pedidos</ion-label>
-              </ion-item>
-            </ion-menu-toggle>
+        <nav aria-label="Menú principal">
+          <ion-list id="navigation-list" lines="none">
+            @if (auth.user$ | async; as user) {
+              <p class="usuario">
+                {{ user.nombre || user.email }}
+                <span class="rol">{{ user.rol === 'admin' ? 'Administrador' : 'Usuario' }}</span>
+              </p>
 
-            @if (user.rol === 'admin') {
               <ion-menu-toggle auto-hide="false">
-                <ion-item routerLink="/dashboard" routerLinkActive="selected" lines="none">
-                  <ion-icon slot="start" name="bar-chart-outline"></ion-icon>
-                  <ion-label>Dashboard Analítico</ion-label>
+                <ion-item routerLink="/pedidos" routerLinkActive="selected" [detail]="false">
+                  <ion-icon slot="start" name="receipt-outline" aria-hidden="true"></ion-icon>
+                  <ion-label>Pedidos</ion-label>
                 </ion-item>
               </ion-menu-toggle>
 
+              @if (user.rol === 'admin') {
+                <ion-menu-toggle auto-hide="false">
+                  <ion-item routerLink="/dashboard" routerLinkActive="selected" [detail]="false">
+                    <ion-icon slot="start" name="bar-chart-outline" aria-hidden="true"></ion-icon>
+                    <ion-label>Dashboard</ion-label>
+                  </ion-item>
+                </ion-menu-toggle>
+
+                <ion-menu-toggle auto-hide="false">
+                  <ion-item routerLink="/usuarios" routerLinkActive="selected" [detail]="false">
+                    <ion-icon slot="start" name="people-outline" aria-hidden="true"></ion-icon>
+                    <ion-label>Usuarios</ion-label>
+                  </ion-item>
+                </ion-menu-toggle>
+              }
+
               <ion-menu-toggle auto-hide="false">
-                <ion-item routerLink="/usuarios" routerLinkActive="selected" lines="none">
-                  <ion-icon slot="start" name="people-outline"></ion-icon>
-                  <ion-label>Usuarios del Sistema</ion-label>
+                <ion-item routerLink="/ayuda" routerLinkActive="selected" [detail]="false">
+                  <ion-icon slot="start" name="help-circle-outline" aria-hidden="true"></ion-icon>
+                  <ion-label>Ayuda</ion-label>
+                </ion-item>
+              </ion-menu-toggle>
+
+              <ion-item button (click)="logout()" [detail]="false" class="salir">
+                <ion-icon slot="start" name="log-out-outline" aria-hidden="true"></ion-icon>
+                <ion-label>Cerrar sesión</ion-label>
+              </ion-item>
+            } @else {
+              <ion-menu-toggle auto-hide="false">
+                <ion-item routerLink="/login" routerLinkActive="selected" [detail]="false">
+                  <ion-icon slot="start" name="log-in-outline" aria-hidden="true"></ion-icon>
+                  <ion-label>Iniciar sesión</ion-label>
                 </ion-item>
               </ion-menu-toggle>
             }
-
-            <ion-item button (click)="logout()" lines="none" class="ion-margin-top">
-              <ion-icon slot="start" name="log-out-outline" color="danger"></ion-icon>
-              <ion-label color="danger">Cerrar Sesión</ion-label>
-            </ion-item>
-          } @else {
-            <ion-menu-toggle auto-hide="false">
-              <ion-item routerLink="/login" routerLinkActive="selected" lines="none">
-                <ion-icon slot="start" name="log-in-outline"></ion-icon>
-                <ion-label>Iniciar Sesión</ion-label>
-              </ion-item>
-            </ion-menu-toggle>
-          }
-        </ion-list>
+          </ion-list>
+        </nav>
       </ion-content>
     </ion-menu>
     <ion-router-outlet id="main-content"></ion-router-outlet>

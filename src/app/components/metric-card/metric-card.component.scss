@@ -1,35 +1,68 @@
 .metric-card {
-  margin: 10px;
-  min-height: 130px;
-  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 96px;
+  padding: 16px;
+  border: 1px solid var(--ion-color-light-shade);
+  border-top: 4px solid var(--card-color);
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--ion-text-color);
+  font: inherit;
+  text-align: left;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  --card-color: var(--ion-color-primary);
+  --card-color-rgb: var(--ion-color-primary-rgb);
 }
 
 .metric-card:hover {
-  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.metric-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+.metric-card[data-color='success'] {
+  --card-color: var(--ion-color-success);
+  --card-color-rgb: var(--ion-color-success-rgb);
 }
 
-.metric-info h2 {
-  font-size: 15px;
-  font-weight: 500;
-  margin: 0 0 12px;
+.metric-card[data-color='tertiary'] {
+  --card-color: var(--ion-color-tertiary);
+  --card-color-rgb: var(--ion-color-tertiary-rgb);
 }
 
-.metric-info h1 {
-  font-size: 28px;
-  font-weight: bold;
-  margin: 0;
+.metric-card[data-color='warning'] {
+  --card-color: var(--ion-color-secondary);
+  --card-color-rgb: var(--ion-color-secondary-rgb);
 }
 
 .metric-icon {
-  font-size: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(var(--card-color-rgb), 0.12);
+  color: var(--card-color);
+  font-size: 24px;
   flex-shrink: 0;
+}
+
+.metric-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.metric-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--ion-color-medium);
+}
+
+.metric-value {
+  font-size: 1.6rem;
+  font-weight: 800;
 }

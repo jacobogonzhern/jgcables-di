@@ -3,13 +3,12 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import {
   IonApp, IonSplitPane, IonMenu, IonContent, IonList,
-  IonListHeader, IonMenuToggle, IonItem, IonIcon, IonLabel,
-  IonRouterOutlet
+  IonMenuToggle, IonItem, IonIcon, IonLabel, IonRouterOutlet
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
-  receiptOutline, barChartOutline, peopleOutline,
-  logInOutline, logOutOutline, hardwareChipOutline
+  receiptOutline, barChartOutline, peopleOutline, helpCircleOutline,
+  logInOutline, logOutOutline, gitNetworkOutline
 } from 'ionicons/icons';
 import { AuthService } from './core/services/auth.service';
 
@@ -20,8 +19,7 @@ import { AuthService } from './core/services/auth.service';
   imports: [
     RouterLink, RouterLinkActive, AsyncPipe,
     IonApp, IonSplitPane, IonMenu, IonContent, IonList,
-    IonListHeader, IonMenuToggle, IonItem, IonIcon, IonLabel,
-    IonRouterOutlet
+    IonMenuToggle, IonItem, IonIcon, IonLabel, IonRouterOutlet
   ]
 })
 export class AppComponent {
@@ -29,12 +27,12 @@ export class AppComponent {
 
   constructor() {
     addIcons({
-      receiptOutline, barChartOutline, peopleOutline,
-      logInOutline, logOutOutline, hardwareChipOutline
+      receiptOutline, barChartOutline, peopleOutline, helpCircleOutline,
+      logInOutline, logOutOutline, gitNetworkOutline
     });
   }
 
   logout() {
     this.auth.logout();
   }
-}
+}

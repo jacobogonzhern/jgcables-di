@@ -1,18 +1,41 @@
+.filtro {
+  max-width: 20rem;
+  --background: #ffffff;
+}
+
+/* Mobile-first: una columna en móvil, dos en tablet y cuatro en escritorio */
 .metrics-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 12px;
   margin-top: 20px;
 }
 
-.metrics-grid app-metric-card {
-  min-width: 0;
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 24px;
 }
 
-@media (max-width: 600px) {
+.loading-state {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
+@media (min-width: 576px) {
   .metrics-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 992px) {
+  .metrics-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
+  .charts-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
