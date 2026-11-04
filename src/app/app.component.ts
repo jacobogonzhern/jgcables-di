@@ -7,7 +7,7 @@ import {
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
-  receiptOutline, barChartOutline, peopleOutline, helpCircleOutline,
+  receiptOutline, barChartOutline, peopleOutline, helpCircleOutline, homeOutline,
   logInOutline, logOutOutline, gitNetworkOutline
 } from 'ionicons/icons';
 import { AuthService } from './core/services/auth.service';
@@ -27,7 +27,7 @@ export class AppComponent {
 
   constructor() {
     addIcons({
-      receiptOutline, barChartOutline, peopleOutline, helpCircleOutline,
+      receiptOutline, barChartOutline, peopleOutline, helpCircleOutline, homeOutline,
       logInOutline, logOutOutline, gitNetworkOutline
     });
   }
@@ -35,4 +35,4 @@ export class AppComponent {
   logout() {
     this.auth.logout();
   }
-}
+}

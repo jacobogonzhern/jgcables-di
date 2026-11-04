@@ -19,6 +19,13 @@
               </p>
 
               <ion-menu-toggle auto-hide="false">
+                <ion-item routerLink="/user-dashboard" routerLinkActive="selected" [detail]="false">
+                  <ion-icon slot="start" name="home-outline" aria-hidden="true"></ion-icon>
+                  <ion-label>Mi panel</ion-label>
+                </ion-item>
+              </ion-menu-toggle>
+
+              <ion-menu-toggle auto-hide="false">
                 <ion-item routerLink="/pedidos" routerLinkActive="selected" [detail]="false">
                   <ion-icon slot="start" name="receipt-outline" aria-hidden="true"></ion-icon>
                   <ion-label>Pedidos</ion-label>

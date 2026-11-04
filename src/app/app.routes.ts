@@ -17,6 +17,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/register/register.page').then(m => m.RegisterPage)
   },
   {
+    path: 'user-dashboard',
+    loadComponent: () => import('./pages/user-dashboard/user-dashboard.page').then(m => m.UserDashboardPage),
+    canActivate: [authGuard]
+  },
+  {
     path: 'pedidos',
     loadComponent: () => import('./pages/pedidos/pedidos.page').then(m => m.PedidosPage),
     canActivate: [authGuard]
@@ -24,14 +29,12 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     loadComponent: () => import('./pages/dashboard/dashboard.page').then(m => m.DashboardPage),
-    canActivate: [authGuard, roleGuard],
-    data: { rol: 'admin' }
+    canActivate: [authGuard, roleGuard('admin')]
   },
   {
     path: 'usuarios',
     loadComponent: () => import('./pages/usuarios/usuarios.page').then(m => m.UsuariosPage),
-    canActivate: [authGuard, roleGuard],
-    data: { rol: 'admin' }
+    canActivate: [authGuard, roleGuard('admin')]
   },
   {
     path: 'ayuda',

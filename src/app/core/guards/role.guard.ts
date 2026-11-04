@@ -3,17 +3,23 @@ import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { RolUsuario } from '../models/user.model';
 
-/** Solo deja pasar si el usuario tiene el rol indicado en `data.rol` de la ruta. */
-export const roleGuard: CanActivateFn = async (route) => {
-  const auth = inject(AuthService);
-  const router = inject(Router);
-  await auth.ready;
-  const rolRequerido = route.data?.['rol'] as RolUsuario;
+/**
+ * Factoría de guards: devuelve un guard que solo deja pasar al rol indicado.
+ * Uso en las rutas: canActivate: [authGuard, roleGuard('admin')]
+ * Si un usuario estándar intenta entrar en una ruta de administrador,
+ * se le redirige a su panel (/user-dashboard).
+ */
+export function roleGuard(rolPermitido: RolUsuario): CanActivateFn {
+  return async (route) => {
+    const auth = inject(AuthService);
+    const router = inject(Router);
+    await auth.ready;
 
-  if (auth.isAuthenticated() && auth.hasRole(rolRequerido)) {
-    return true;
-  }
+    if (auth.hasRole(rolPermitido)) {
+      return true;
+    }
 
-  console.warn(`[RoleGuard] Acceso denegado a '${route.routeConfig?.path}'. Rol actual: '${auth.currentUser?.rol}'. Se requiere: '${rolRequerido}'. Redirigiendo...`);
-  return router.createUrlTree(['/pedidos']);
-};
+    console.warn(`[RoleGuard] Acceso denegado a '${route.routeConfig?.path}'. Rol actual: '${auth.currentUser?.rol}'. Se requiere: '${rolPermitido}'. Redirigiendo...`);
+    return router.createUrlTree([auth.isAuthenticated() ? '/user-dashboard' : '/login']);
+  };
+}

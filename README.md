@@ -45,7 +45,7 @@ src/app
 │   ├── models/      Interfaces de datos
 │   ├── services/    Auth, Firebase, Supabase y exportación de informes
 │   └── validators/  Validador asíncrono de email
-└── pages/           login, register, pedidos, dashboard, usuarios, ayuda
+└── pages/           login, register, user-dashboard, pedidos, dashboard, usuarios, ayuda
 ```
 
 ## Flujo de trabajo con Git
@@ -60,8 +60,9 @@ Vercel despliega automáticamente la rama `main`.
 
 ### 1. Acceso
 1. Abre la aplicación e introduce tu correo y tu contraseña.
-2. Pulsa **Entrar**. Si eres administrador irás al **Dashboard**; si eres usuario, a **Pedidos**.
-3. Para salir, abre el menú lateral y pulsa **Cerrar sesión**.
+2. Pulsa **Entrar**. Si eres administrador irás al **Dashboard**; si eres usuario, a **Mi panel**.
+3. La sesión se guarda en `sessionStorage`: se mantiene al recargar la página y se cierra al cerrar la pestaña.
+4. Para salir, abre el menú lateral y pulsa **Cerrar sesión**.
 
 ### 2. Crear una cuenta
 1. En la pantalla de acceso pulsa **Regístrate**.
@@ -69,21 +70,25 @@ Vercel despliega automáticamente la rama `main`.
 3. Mientras escribes el correo, la aplicación comprueba si ya está registrado y te avisa.
 4. Pulsa **Crear cuenta** y después inicia sesión. Las cuentas nuevas tienen el rol **Usuario**.
 
-### 3. Pedidos
+### 3. Mi panel
+- Resumen de los pedidos (totales, pendientes y entregados) con accesos directos a Pedidos y Ayuda.
+- Si un usuario estándar intenta abrir una página de administrador (por ejemplo escribiendo `/dashboard` en la barra de direcciones), se le devuelve automáticamente a **Mi panel**.
+
+### 4. Pedidos
 - La tabla se actualiza sola cuando cambia un pedido.
 - Usa el **buscador** para filtrar por cualquier columna y el selector para cambiar las filas por página.
 - Pulsa una fila (o selecciónala con `Tab` y pulsa `Enter`) para ver el resumen del pedido.
 - **Exportar PDF** descarga un informe con la cabecera de la empresa. **Exportar CSV** genera un archivo para Excel.
 
-### 4. Dashboard (solo administrador)
+### 5. Dashboard (solo administrador)
 - Muestra el total de pedidos, de clientes, los ingresos y los pedidos pendientes.
 - Filtra por estado con el desplegable o pulsando un sector del gráfico circular.
 - Pulsa la tarjeta de pedidos para ir al listado.
 
-### 5. Usuarios (solo administrador)
+### 6. Usuarios (solo administrador)
 - Lista de las personas registradas en la aplicación, con buscador.
 
-### 6. Ayuda
+### 7. Ayuda
 - Este mismo manual está disponible dentro de la aplicación en el apartado **Ayuda** del menú.
 
 ### Accesibilidad

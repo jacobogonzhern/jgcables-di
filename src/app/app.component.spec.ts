@@ -36,13 +36,13 @@ describe('AppComponent', () => {
     expect(enlacesDelMenu()).toBe(1);
   });
 
-  it('un usuario estándar ve Pedidos y Ayuda', () => {
+  it('un usuario estándar ve Mi panel, Pedidos y Ayuda', () => {
     user$.next({ uid: '1', email: 'usuario@jgcables.com', nombre: 'Usuario', rol: 'usuario' });
-    expect(enlacesDelMenu()).toBe(2);
+    expect(enlacesDelMenu()).toBe(3);
   });
 
-  it('un administrador ve Pedidos, Dashboard, Usuarios y Ayuda', () => {
+  it('un administrador ve Mi panel, Pedidos, Dashboard, Usuarios y Ayuda', () => {
     user$.next({ uid: '2', email: 'admin@jgcables.com', nombre: 'Admin', rol: 'admin' });
-    expect(enlacesDelMenu()).toBe(4);
+    expect(enlacesDelMenu()).toBe(5);
   });
 });

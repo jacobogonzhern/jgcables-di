@@ -54,7 +54,7 @@ export class LoginPage implements OnInit {
       const usuario = await this.auth.login(email, password);
       await loader.dismiss();
       const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-      const destino = returnUrl ?? (usuario.rol === 'admin' ? '/dashboard' : '/pedidos');
+      const destino = returnUrl ?? (usuario.rol === 'admin' ? '/dashboard' : '/user-dashboard');
       await this.router.navigateByUrl(destino, { replaceUrl: true });
     } catch (error) {
       await loader.dismiss();

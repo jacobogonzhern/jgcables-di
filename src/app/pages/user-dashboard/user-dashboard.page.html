@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button aria-label="Abrir menú"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Mi panel</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  @if (auth.user$ | async; as usuario) {
+    <div class="page-heading">
+      <span class="etiqueta">{{ usuario.rol === 'admin' ? 'Administrador' : 'Usuario' }}</span>
+      <h1>Hola, {{ usuario.nombre || usuario.email }}</h1>
+      <p>Este es tu resumen de la actividad de JG Cables.</p>
+    </div>
+
+    <div class="page-body">
+      <div class="resumen">
+        <app-metric-card title="Pedidos totales" [value]="totalPedidos()" icon="cart-outline"
+          color="primary" (cardClick)="irA('/pedidos')"></app-metric-card>
+        <app-metric-card title="Pendientes" [value]="pendientes()" icon="time-outline"
+          color="warning" (cardClick)="irA('/pedidos')"></app-metric-card>
+        <app-metric-card title="Entregados" [value]="entregados()" icon="stats-chart"
+          color="success" (cardClick)="irA('/pedidos')"></app-metric-card>
+      </div>
+
+      <section class="panel sesion" aria-labelledby="titulo-sesion">
+        <h2 id="titulo-sesion">Tu sesión</h2>
+        <ul>
+          <li><strong>Correo:</strong> {{ usuario.email }}</li>
+          <li><strong>Rol:</strong> {{ usuario.rol }}</li>
+          <li>La sesión se guarda en <code>sessionStorage</code> y se cierra al cerrar la pestaña del navegador.</li>
+        </ul>
+      </section>
+
+      <div class="toolbar-acciones">
+        <ion-button color="secondary" (click)="irA('/pedidos')">
+          <ion-icon slot="start" name="receipt-outline" aria-hidden="true"></ion-icon>
+          Ver pedidos
+        </ion-button>
+        <ion-button fill="outline" (click)="irA('/ayuda')">
+          <ion-icon slot="start" name="help-circle-outline" aria-hidden="true"></ion-icon>
+          Ayuda
+        </ion-button>
+      </div>
+    </div>
+  }
+</ion-content>

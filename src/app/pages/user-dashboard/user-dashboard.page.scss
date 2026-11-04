@@ -1,0 +1,28 @@
+.resumen {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.sesion {
+  margin-bottom: 20px;
+}
+
+.sesion h2 {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+  color: var(--ion-color-primary);
+}
+
+.sesion ul {
+  margin: 0;
+  padding-left: 18px;
+  line-height: 1.7;
+}
+
+@media (min-width: 768px) {
+  .resumen {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

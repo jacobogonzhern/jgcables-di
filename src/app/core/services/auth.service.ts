@@ -15,15 +15,23 @@ import { RolUsuario, Usuario } from '../models/user.model';
 
 /**
  * Servicio de autenticación con Firebase Authentication.
- * El rol de cada usuario se lee de Firestore (colección `usuarios`),
- * por lo que no se puede falsificar desde el navegador.
+ * El rol de cada usuario se lee de Firestore (colección `usuarios`).
+ * Además, la sesión se guarda en sessionStorage (Web Storage API) para que
+ * no se pierda al recargar la página. Esa copia solo sirve para mostrar la
+ * interfaz al instante: los guards esperan siempre a que Firebase confirme
+ * la sesión, así que modificar el sessionStorage a mano no da acceso a nada.
  */
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private readonly router = inject(Router);
-  private readonly userSubject = new BehaviorSubject<Usuario | null>(null);
+
+  /** Clave usada en sessionStorage para guardar la sesión. */
+  private readonly STORAGE_KEY = 'JGCABLES_SESION';
+
+  /** Estado en memoria. Al arrancar se recupera lo guardado en sessionStorage. */
+  private readonly userSubject = new BehaviorSubject<Usuario | null>(this.leerSesionGuardada());
 
   /** Usuario actual como flujo reactivo (lo usa el menú con el pipe async). */
   public readonly user$: Observable<Usuario | null> = this.userSubject.asObservable();
@@ -35,10 +43,10 @@ export class AuthService {
     this.ready = new Promise<void>(resolve => {
       onAuthStateChanged(auth, async firebaseUser => {
         try {
-          this.userSubject.next(firebaseUser ? await this.cargarPerfil(firebaseUser) : null);
+          this.guardarSesion(firebaseUser ? await this.cargarPerfil(firebaseUser) : null);
         } catch (error) {
           console.error('[Auth] No se pudo cargar el perfil del usuario:', error);
-          this.userSubject.next(null);
+          this.guardarSesion(null);
         }
         resolve();
       });
@@ -65,7 +73,7 @@ export class AuthService {
     try {
       const credencial = await signInWithEmailAndPassword(auth, email.trim(), password);
       const usuario = await this.cargarPerfil(credencial.user);
-      this.userSubject.next(usuario);
+      this.guardarSesion(usuario);
       return usuario;
     } catch (error) {
       throw new Error(this.traducirError(error));
@@ -85,7 +93,7 @@ export class AuthService {
         rol: 'usuario'
       });
       await signOut(auth);
-      this.userSubject.next(null);
+      this.guardarSesion(null);
     } catch (error) {
       throw new Error(this.traducirError(error));
     }
@@ -93,8 +101,32 @@ export class AuthService {
 
   public async logout(): Promise<void> {
     await signOut(auth);
-    this.userSubject.next(null);
+    this.guardarSesion(null);
     await this.router.navigate(['/login']);
+  }
+
+  /** Actualiza la sesión en memoria y en sessionStorage (o la borra si es null). */
+  private guardarSesion(usuario: Usuario | null): void {
+    if (usuario) {
+      sessionStorage.setItem(this.STORAGE_KEY, JSON.stringify(usuario));
+    } else {
+      sessionStorage.removeItem(this.STORAGE_KEY);
+    }
+    this.userSubject.next(usuario);
+  }
+
+  /** Recupera la sesión guardada al recargar la página. */
+  private leerSesionGuardada(): Usuario | null {
+    const datos = sessionStorage.getItem(this.STORAGE_KEY);
+    if (!datos) {
+      return null;
+    }
+    try {
+      return JSON.parse(datos) as Usuario;
+    } catch {
+      sessionStorage.removeItem(this.STORAGE_KEY);
+      return null;
+    }
   }
 
   /** Lee el nombre y el rol del usuario en Firestore (`usuarios/{uid}`). */
